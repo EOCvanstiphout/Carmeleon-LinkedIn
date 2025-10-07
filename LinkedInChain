@@ -3,14 +3,46 @@
   "description": "Maakt een inputveld, schrijft een LinkedIn-post, maakt een Sora-afbeeldingprompt en presenteert tekst + beeld.",
   "version": "1.0",
   "inputs": {
-    "onderwerp": { "type": "string", "label": "Onderwerp / invalshoek", "required": true },
-    "informatie": { "type": "text", "label": "Feiten, bullets, cijfers, quotes", "required": true },
-    "doelgroep": { "type": "string", "label": "Primair publiek (bijv. dealers, herstellers, klanten)", "required": true },
-    "tone": { "type": "string", "label": "Schrijfstijl (bijv. concreet, inspirerend, expert)", "default": "concreet" },
-    "cta": { "type": "string", "label": "Call-to-action", "default": "Deel je ervaring in de reacties." },
-    "hashtags": { "type": "string", "label": "Hashtags, komma-gescheiden", "default": "automotive,schadeafhandeling,innovatie" },
-    "beeldstijl": { "type": "string", "label": "Beeldstijl voor Sora (bijv. clean, high-tech, editorial)", "default": "clean" },
-    "merkassets_opt": { "type": "text", "label": "Optioneel: merk- of kleurenrichtlijnen", "required": false }
+    "onderwerp": {
+      "type": "string",
+      "label": "Onderwerp / invalshoek",
+      "required": true
+    },
+    "informatie": {
+      "type": "text",
+      "label": "Feiten, bullets, cijfers, quotes",
+      "required": true
+    },
+    "doelgroep": {
+      "type": "string",
+      "label": "Primair publiek (bijv. dealers, herstellers, klanten)",
+      "required": true
+    },
+    "tone": {
+      "type": "string",
+      "label": "Schrijfstijl (bijv. concreet, inspirerend, expert)",
+      "default": "concreet"
+    },
+    "cta": {
+      "type": "string",
+      "label": "Call-to-action",
+      "default": "Deel je ervaring in de reacties."
+    },
+    "hashtags": {
+      "type": "string",
+      "label": "Hashtags, komma-gescheiden",
+      "default": "automotive,schadeafhandeling,innovatie"
+    },
+    "beeldstijl": {
+      "type": "string",
+      "label": "Beeldstijl voor Sora (bijv. clean, high-tech, editorial)",
+      "default": "clean"
+    },
+    "merkassets_opt": {
+      "type": "text",
+      "label": "Optioneel: merk- of kleurenrichtlijnen",
+      "required": false
+    }
   },
   "actions": [
     {
@@ -23,19 +55,25 @@
       "type": "chatgpt.generate",
       "model": "gpt-5",
       "input_ref": "post_prompt",
-      "outputs": { "text": "post_text" }
+      "outputs": {
+        "text": "post_text"
+      }
     },
     {
       "id": "sora_prompt",
       "type": "compose",
       "template": "Create one still image for a LinkedIn post.\nPurpose: illustrate the following post text:\n\"\"\"\n{{post_text}}\n\"\"\"\nImage requirements:\n- Style: {{beeldstijl}}. Editorial, minimal, high legibility in feed. 1200x1200.\n- Subject matter must visually encode the core idea from the post. Prefer metaphor over literal car photos unless facts demand it.\n- Composition: strong focal point, negative space top-right for overlaid copy if needed.\n- Lighting: soft studio or natural rim light. No harsh contrast.\n- Colors: align with brand if provided.\n- Text in image: none.\n- No logos unless explicitly provided in brand assets.\nIf brand guidelines provided, apply:\n{{merkassets_opt}}",
-      "vars": { "post_text": "{{gen_post.post_text}}" }
+      "vars": {
+        "post_text": "{{gen_post.post_text}}"
+      }
     },
     {
       "id": "gen_image",
       "type": "sora.generate_image",
       "prompt_ref": "sora_prompt",
-      "outputs": { "url": "image_url" }
+      "outputs": {
+        "url": "image_url"
+      }
     },
     {
       "id": "present",
